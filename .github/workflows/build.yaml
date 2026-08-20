@@ -34,7 +34,7 @@ jobs:
         uses: cachix/install-nix-action@v31
 
       - name: Build zig
-        run: NIXPKGS_ALLOW_UNFREE=1 nix-build ${{ matrix.build }}
+        run: NIXPKGS_ALLOW_UNFREE=1 nix-build --attr ${{ matrix.build }}
 
       - name: Compress result
         run: tar -caf zig-${{ matrix.file }}.tar.gz --directory result .
