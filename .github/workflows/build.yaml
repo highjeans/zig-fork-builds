@@ -1,0 +1,47 @@
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            build: default
+            platform: x64 Linux
+            file: x64-linux
+          - runner: ubuntu-22.04-arm
+            build: default
+            platform: 64-bit Arm Linux
+            file: arm64-linux
+          - runner: ubuntu-22.05-arm
+            build: windows
+            platform: x64 Windows
+            file: windows
+          - runner: macos-latest
+            build: default
+            platform: Arm macOS
+            file: arm-darwin
+
+    name: Build ${{ matrix.platform }}
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install nix
+        uses: cachix/install-nix-action@v31
+
+      - name: Build zig
+        run: NIXPKGS_ALLOW_UNFREE=1 nix-build ${{ matrix.build }}
+
+      - name: Compress result
+        run: tar -caf zig-${{ matrix.file }}.tar.gz --directory result .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: zig-${{ matrix.file }}.tar.gz
+          path: ./zig-${{ matrix.file }}.tar.gz
+          archive: false
