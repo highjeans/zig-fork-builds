@@ -15,10 +15,6 @@ jobs:
             build: default
             platform: 64-bit Arm Linux
             file: arm64-linux
-          - runner: ubuntu-22.04-arm
-            build: windows
-            platform: x64 Windows
-            file: windows
           - runner: self-hosted
             build: default
             platform: Arm macOS
