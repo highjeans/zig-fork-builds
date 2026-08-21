@@ -8,15 +8,12 @@ jobs:
       matrix:
         include:
           - runner: ubuntu-latest
-            build: default
             platform: x64 Linux
             file: x64-linux
           - runner: ubuntu-22.04-arm
-            build: default
             platform: 64-bit Arm Linux
             file: arm64-linux
           - runner: self-hosted
-            build: default
             platform: Arm macOS
             file: arm-darwin
 
@@ -30,7 +27,7 @@ jobs:
         uses: cachix/install-nix-action@v31
 
       - name: Build zig
-        run: NIXPKGS_ALLOW_UNFREE=1 nix-build --attr ${{ matrix.build }}
+        run: NIXPKGS_ALLOW_UNFREE=1 nix-build
 
       - name: Compress result
         run: tar -caf zig-${{ matrix.file }}.tar.gz --directory result .
