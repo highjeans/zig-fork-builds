@@ -19,7 +19,7 @@ jobs:
             build: windows
             platform: x64 Windows
             file: windows
-          - runner: macos-latest
+          - runner: self-hosted
             build: default
             platform: Arm macOS
             file: arm-darwin
