@@ -4,7 +4,6 @@
   cmake,
   lib,
   llvmPackages_22,
-  coreutils,
   ninja,
   xcbuild,
   libxml2,
@@ -67,18 +66,4 @@ stdenv.mkDerivation (finalAttrs: {
   preBuild = ''
     export ZIG_GLOBAL_CACHE_DIR="$TMPDIR/zig-cache";
   '';
-
-  postPatch =
-    # Zig's build looks at /usr/bin/env to find dynamic linking info. This doesn't
-    # work in Nix's sandbox. Use env from our coreutils instead.
-    ''
-      substituteInPlace lib/std/zig/system.zig \
-        --replace-fail "/usr/bin/env" "${lib.getExe' coreutils "env"}"
-    '';
-
-  # postBuild = "stage3/bin/zig build --zig-lib=$(pwd)/stage3/lib/zig langref";
-
-  # postInstall = ''
-  #   install -Dm444 ../zig-out/doc/langref.html -t $doc/share/doc/zig-${finalAttrs.version}/html
-  # '';
 })
